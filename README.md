@@ -21,6 +21,9 @@ Add the dependency to your `pom.xml`:
 ### Registration
 
 ```java
+import com.kingsrook.qbits.geodata.GeoDataQBitConfig;
+import com.kingsrook.qbits.geodata.GeoDataQBitProducer;
+
 new GeoDataQBitProducer()
    .withConfig(new GeoDataQBitConfig()
       .withBackendName("rdbms")
@@ -33,17 +36,29 @@ This adds Country, StateProvince, and City tables with the specified prefix (e.g
 ### Querying Data
 
 ```java
+import com.kingsrook.qqq.backend.core.actions.tables.GetAction;
+import com.kingsrook.qqq.backend.core.actions.tables.QueryAction;
+import com.kingsrook.qqq.backend.core.model.actions.tables.get.GetInput;
+import com.kingsrook.qqq.backend.core.model.actions.tables.query.QFilterCriteria;
+import com.kingsrook.qqq.backend.core.model.actions.tables.query.QQueryFilter;
+import com.kingsrook.qqq.backend.core.model.actions.tables.query.QueryInput;
+import com.kingsrook.qbits.geodata.model.City;
+import com.kingsrook.qbits.geodata.model.Country;
+import com.kingsrook.qbits.geodata.model.StateProvince;
+
+import static com.kingsrook.qqq.backend.core.model.actions.tables.query.QCriteriaOperator.*;
+
 // Get a country by alpha-2 code
-Country usa = new GetAction().executeForRecord(new GetInput(Country.TABLE_NAME)
+Country usa = new GetAction().executeForRecord(new GetInput("shipping_country")
    .withUniqueKey(Map.of("alpha2Code", "US")), Country.class);
 
 // Query states for a country
-List<StateProvince> states = new QueryAction().execute(new QueryInput(StateProvince.TABLE_NAME)
+List<StateProvince> states = new QueryAction().execute(new QueryInput("shipping_stateProvince")
    .withFilter(new QQueryFilter(new QFilterCriteria("countryId", EQUALS, usa.getId()))))
    .getRecordEntities(StateProvince.class);
 
 // Query cities with population filter
-List<City> cities = new QueryAction().execute(new QueryInput(City.TABLE_NAME)
+List<City> cities = new QueryAction().execute(new QueryInput("shipping_city")
    .withFilter(new QQueryFilter()
       .withCriteria(new QFilterCriteria("stateProvinceId", EQUALS, state.getId()))
       .withCriteria(new QFilterCriteria("population", GREATER_THAN, 100000))))
@@ -55,8 +70,11 @@ List<City> cities = new QueryAction().execute(new QueryInput(City.TABLE_NAME)
 The entities are registered as PossibleValueSources for use in dropdowns:
 
 ```java
+import com.kingsrook.qqq.backend.core.model.metadata.fields.QFieldMetaData;
+import com.kingsrook.qqq.backend.core.model.metadata.fields.QFieldType;
+
 new QFieldMetaData("countryId", QFieldType.INTEGER)
-   .withPossibleValueSourceName("country")
+   .withPossibleValueSourceName("shipping_country")
 ```
 
 ## License
