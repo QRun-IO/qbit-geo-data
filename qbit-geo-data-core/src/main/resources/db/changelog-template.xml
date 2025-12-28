@@ -5,58 +5,114 @@
    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
 
-   <!-- SECTION: exampleEntity -->
-   <changeSet id="${prefix}-create-example-entity-v1" author="example-data-qbit">
-      <createTable tableName="${prefix}_example_entity">
+   <!-- SECTION: country -->
+   <changeSet id="${prefix}-create-country-v1" author="geo-data-qbit">
+      <createTable tableName="${prefix}_country">
          <column name="id" type="INT" autoIncrement="true">
             <constraints primaryKey="true"/>
          </column>
-         <column name="code" type="VARCHAR(50)">
-            <constraints nullable="false" unique="true"/>
+         <column name="alpha2_code" type="VARCHAR(2)">
+            <constraints nullable="false"/>
          </column>
+         <column name="alpha3_code" type="VARCHAR(3)"/>
+         <column name="numeric_code" type="INT"/>
          <column name="name" type="VARCHAR(100)">
             <constraints nullable="false"/>
          </column>
-         <column name="description" type="VARCHAR(500)"/>
+         <column name="official_name" type="VARCHAR(100)"/>
          <column name="is_active" type="BOOLEAN" defaultValueBoolean="true"/>
          <column name="create_date" type="TIMESTAMP"/>
          <column name="modify_date" type="TIMESTAMP"/>
       </createTable>
-      <createIndex tableName="${prefix}_example_entity" indexName="${prefix}_example_entity_code_idx">
-         <column name="code"/>
+      <addUniqueConstraint
+         tableName="${prefix}_country"
+         columnNames="alpha2_code"
+         constraintName="${prefix}_country_alpha2_uk"/>
+      <createIndex tableName="${prefix}_country" indexName="${prefix}_country_alpha2_idx">
+         <column name="alpha2_code"/>
+      </createIndex>
+      <createIndex tableName="${prefix}_country" indexName="${prefix}_country_alpha3_idx">
+         <column name="alpha3_code"/>
       </createIndex>
    </changeSet>
-   <!-- END SECTION: exampleEntity -->
+   <!-- END SECTION: country -->
 
-   <!-- SECTION: exampleChildEntity -->
-   <changeSet id="${prefix}-create-example-child-entity-v1" author="example-data-qbit">
-      <createTable tableName="${prefix}_example_child_entity">
+   <!-- SECTION: stateProvince -->
+   <changeSet id="${prefix}-create-state-province-v1" author="geo-data-qbit">
+      <createTable tableName="${prefix}_state_province">
          <column name="id" type="INT" autoIncrement="true">
             <constraints primaryKey="true"/>
          </column>
-         <column name="example_entity_id" type="INT">
+         <column name="country_id" type="INT">
             <constraints nullable="false"/>
          </column>
-         <column name="code" type="VARCHAR(50)">
+         <column name="code" type="VARCHAR(10)">
             <constraints nullable="false"/>
          </column>
          <column name="name" type="VARCHAR(100)">
             <constraints nullable="false"/>
          </column>
+         <column name="subdivision_type" type="VARCHAR(50)"/>
          <column name="is_active" type="BOOLEAN" defaultValueBoolean="true"/>
          <column name="create_date" type="TIMESTAMP"/>
          <column name="modify_date" type="TIMESTAMP"/>
       </createTable>
       <addForeignKeyConstraint
-         baseTableName="${prefix}_example_child_entity"
-         baseColumnNames="example_entity_id"
-         referencedTableName="${prefix}_example_entity"
+         baseTableName="${prefix}_state_province"
+         baseColumnNames="country_id"
+         referencedTableName="${prefix}_country"
          referencedColumnNames="id"
-         constraintName="${prefix}_fk_child_to_parent"/>
-      <createIndex tableName="${prefix}_example_child_entity" indexName="${prefix}_example_child_entity_parent_idx">
-         <column name="example_entity_id"/>
+         constraintName="${prefix}_fk_state_province_country"/>
+      <addUniqueConstraint
+         tableName="${prefix}_state_province"
+         columnNames="country_id,code"
+         constraintName="${prefix}_state_province_country_code_uk"/>
+      <createIndex tableName="${prefix}_state_province" indexName="${prefix}_state_province_country_idx">
+         <column name="country_id"/>
+      </createIndex>
+      <createIndex tableName="${prefix}_state_province" indexName="${prefix}_state_province_code_idx">
+         <column name="code"/>
       </createIndex>
    </changeSet>
-   <!-- END SECTION: exampleChildEntity -->
+   <!-- END SECTION: stateProvince -->
+
+   <!-- SECTION: city -->
+   <changeSet id="${prefix}-create-city-v1" author="geo-data-qbit">
+      <createTable tableName="${prefix}_city">
+         <column name="id" type="INT" autoIncrement="true">
+            <constraints primaryKey="true"/>
+         </column>
+         <column name="state_province_id" type="INT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="name" type="VARCHAR(200)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="ascii_name" type="VARCHAR(200)"/>
+         <column name="population" type="INT"/>
+         <column name="latitude" type="DECIMAL(10,7)"/>
+         <column name="longitude" type="DECIMAL(10,7)"/>
+         <column name="timezone" type="VARCHAR(50)"/>
+         <column name="is_active" type="BOOLEAN" defaultValueBoolean="true"/>
+         <column name="create_date" type="TIMESTAMP"/>
+         <column name="modify_date" type="TIMESTAMP"/>
+      </createTable>
+      <addForeignKeyConstraint
+         baseTableName="${prefix}_city"
+         baseColumnNames="state_province_id"
+         referencedTableName="${prefix}_state_province"
+         referencedColumnNames="id"
+         constraintName="${prefix}_fk_city_state_province"/>
+      <createIndex tableName="${prefix}_city" indexName="${prefix}_city_state_province_idx">
+         <column name="state_province_id"/>
+      </createIndex>
+      <createIndex tableName="${prefix}_city" indexName="${prefix}_city_name_idx">
+         <column name="name"/>
+      </createIndex>
+      <createIndex tableName="${prefix}_city" indexName="${prefix}_city_population_idx">
+         <column name="population"/>
+      </createIndex>
+   </changeSet>
+   <!-- END SECTION: city -->
 
 </databaseChangeLog>
