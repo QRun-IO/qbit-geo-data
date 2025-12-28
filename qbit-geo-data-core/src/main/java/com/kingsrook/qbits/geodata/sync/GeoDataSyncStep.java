@@ -1,10 +1,11 @@
 /*******************************************************************************
  ** Sync step for loading and updating geographic reference data.
  **
- ** Performs natural key upsert:
+ ** Syncs all three entity types (Country, StateProvince, City) from bundled
+ ** JSON files into database tables. Performs natural key upsert:
  ** - Country: by alpha2Code
- ** - StateProvince: by countryId + code
- ** - City: by stateProvinceId + name
+ ** - StateProvince: by countryAlpha2 + code
+ ** - City: by countryAlpha2 + stateCode + name
  *******************************************************************************/
 package com.kingsrook.qbits.geodata.sync;
 
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import com.kingsrook.qqq.backend.core.actions.processes.BackendStep;
 import com.kingsrook.qqq.backend.core.actions.processes.RunBackendStepInput;
 import com.kingsrook.qqq.backend.core.actions.processes.RunBackendStepOutput;
 import com.kingsrook.qqq.backend.core.actions.tables.InsertAction;
@@ -29,29 +31,61 @@ import com.kingsrook.qqq.backend.core.model.actions.tables.query.QueryInput;
 import com.kingsrook.qqq.backend.core.model.actions.tables.query.QueryOutput;
 import com.kingsrook.qqq.backend.core.model.actions.tables.update.UpdateInput;
 import com.kingsrook.qqq.backend.core.model.data.QRecord;
-import com.kingsrook.qqq.backend.core.processes.implementations.etl.streamedwithfrontend.AbstractTransformStep;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import static com.kingsrook.qqq.backend.core.logging.LogUtils.logPair;
 
 
-public class GeoDataSyncStep extends AbstractTransformStep
+public class GeoDataSyncStep implements BackendStep
 {
    private static final QLogger LOG = QLogger.getLogger(GeoDataSyncStep.class);
+
+   public static final String FIELD_TABLE_NAME_PREFIX = "tableNamePrefix";
 
 
 
    /*******************************************************************************
-    ** Run the sync step.
+    ** Run the sync step - syncs all three entity types.
     *******************************************************************************/
    @Override
-   public void runOnePage(RunBackendStepInput input, RunBackendStepOutput output) throws QException
+   public void run(RunBackendStepInput input, RunBackendStepOutput output) throws QException
    {
-      String tableName = input.getValueString("tableName");
-      String resourcePath = input.getValueString("resourcePath");
-      List<String> naturalKeyFields = parseNaturalKeyFields(input.getValueString("naturalKeyFields"));
+      String prefix = input.getValueString(FIELD_TABLE_NAME_PREFIX);
+      if(prefix == null || prefix.isEmpty())
+      {
+         throw new QException("tableNamePrefix is required");
+      }
 
-      LOG.info("Starting geo data sync",
+      LOG.info("Starting geo data sync", logPair("prefix", prefix));
+
+      //////////////////////////////////////////////////////////////////////////
+      // Sync in order: countries first (no dependencies), then states, then //
+      // cities (which may reference states)                                  //
+      //////////////////////////////////////////////////////////////////////////
+      int countriesInserted = syncTable(prefix + "_country", "/data/countries.json", List.of("alpha2Code"));
+      int statesInserted = syncTable(prefix + "_stateProvince", "/data/states.json", List.of("countryAlpha2", "code"));
+      int citiesInserted = syncTable(prefix + "_city", "/data/cities.json", List.of("countryAlpha2", "stateCode", "name"));
+
+      LOG.info("Geo data sync complete",
+         logPair("prefix", prefix),
+         logPair("countries", countriesInserted),
+         logPair("states", statesInserted),
+         logPair("cities", citiesInserted));
+
+      output.addValue("countriesSynced", countriesInserted);
+      output.addValue("statesSynced", statesInserted);
+      output.addValue("citiesSynced", citiesInserted);
+   }
+
+
+
+   /*******************************************************************************
+    ** Sync a single table from JSON resource.
+    ** Returns count of records processed.
+    *******************************************************************************/
+   private int syncTable(String tableName, String resourcePath, List<String> naturalKeyFields) throws QException
+   {
+      LOG.info("Syncing table",
          logPair("table", tableName),
          logPair("resource", resourcePath),
          logPair("naturalKey", naturalKeyFields));
@@ -124,29 +158,13 @@ public class GeoDataSyncStep extends AbstractTransformStep
       /////////////////////////////////////////////////////////////////////////
       // 5. Log summary                                                      //
       /////////////////////////////////////////////////////////////////////////
-      LOG.info("Geo data sync complete",
+      LOG.info("Table sync complete",
          logPair("table", tableName),
          logPair("inserted", toInsert.size()),
          logPair("updated", toUpdate.size()),
          logPair("deactivated", toDeactivate.size()));
-   }
 
-
-
-   /*******************************************************************************
-    ** Parse comma-separated natural key fields.
-    *******************************************************************************/
-   private List<String> parseNaturalKeyFields(String naturalKeyFields)
-   {
-      List<String> fields = new ArrayList<>();
-      if(naturalKeyFields != null)
-      {
-         for(String field : naturalKeyFields.split(","))
-         {
-            fields.add(field.trim());
-         }
-      }
-      return fields;
+      return sourceRecords.size();
    }
 
 

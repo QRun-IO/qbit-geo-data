@@ -52,6 +52,21 @@ This creates three tables in your database:
 
 The QBit includes a sync process that populates tables from bundled JSON data. Run it once after creating your tables, or schedule it to pick up updates.
 
+```java
+import com.kingsrook.qqq.backend.core.actions.processes.RunProcessAction;
+import com.kingsrook.qqq.backend.core.model.actions.processes.RunProcessInput;
+import com.kingsrook.qbits.geodata.sync.GeoDataSyncProcessMetaDataProducer;
+import com.kingsrook.qbits.geodata.sync.GeoDataSyncStep;
+
+RunProcessInput input = new RunProcessInput();
+input.setProcessName(GeoDataSyncProcessMetaDataProducer.NAME);
+input.addValue(GeoDataSyncStep.FIELD_TABLE_NAME_PREFIX, "shipping");
+
+new RunProcessAction().execute(input);
+```
+
+This syncs all three tables (countries, states, cities) in order.
+
 ### Step 3: Query the Data
 
 Use standard QQQ actions with the **prefixed table names** and the entity classes:
