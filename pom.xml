@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
    <groupId>com.kingsrook.qbits</groupId>
-   <artifactId>qbit-example-data</artifactId>
+   <artifactId>qbit-geo-data-parent</artifactId>
    <version>0.1.0-SNAPSHOT</version>
-   <packaging>jar</packaging>
+   <packaging>pom</packaging>
 
-   <name>QBit Example Data</name>
-   <description>Example Data QBit - rename this for your QBit</description>
+   <name>QBit Geographic Data - Parent</name>
+   <description>Geographic reference data for QQQ applications</description>
+
+   <modules>
+      <module>qbit-geo-data-core</module>
+      <module>tools</module>
+   </modules>
 
    <properties>
       <maven.compiler.source>17</maven.compiler.source>
@@ -20,39 +24,40 @@
       <qqq.version>0.23.0</qqq.version>
    </properties>
 
-   <dependencies>
-      <dependency>
-         <groupId>com.kingsrook.qqq</groupId>
-         <artifactId>qqq-backend-core</artifactId>
-         <version>${qqq.version}</version>
-      </dependency>
-
-      <dependency>
-         <groupId>org.junit.jupiter</groupId>
-         <artifactId>junit-jupiter</artifactId>
-         <version>5.10.0</version>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.assertj</groupId>
-         <artifactId>assertj-core</artifactId>
-         <version>3.24.2</version>
-         <scope>test</scope>
-      </dependency>
-   </dependencies>
+   <dependencyManagement>
+      <dependencies>
+         <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20231013</version>
+         </dependency>
+         <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.0</version>
+         </dependency>
+         <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.24.2</version>
+         </dependency>
+      </dependencies>
+   </dependencyManagement>
 
    <build>
-      <plugins>
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.11.0</version>
-         </plugin>
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <version>3.1.2</version>
-         </plugin>
-      </plugins>
+      <pluginManagement>
+         <plugins>
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-compiler-plugin</artifactId>
+               <version>3.11.0</version>
+            </plugin>
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-surefire-plugin</artifactId>
+               <version>3.1.2</version>
+            </plugin>
+         </plugins>
+      </pluginManagement>
    </build>
 </project>

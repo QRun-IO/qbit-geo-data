@@ -1,0 +1,17 @@
+[
+   {
+      "code": "EX1",
+      "name": "Example One",
+      "description": "First example record"
+   },
+   {
+      "code": "EX2",
+      "name": "Example Two",
+      "description": "Second example record"
+   },
+   {
+      "code": "EX3",
+      "name": "Example Three",
+      "description": "Third example record"
+   }
+]
