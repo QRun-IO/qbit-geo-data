@@ -1,6 +1,7 @@
 # QBit: Geo Data
 
 [![Alpha](https://img.shields.io/badge/status-alpha-orange)]()
+[![CircleCI](https://circleci.com/gh/QRun-IO/qbit-geo-data.svg?style=shield)](https://circleci.com/gh/QRun-IO/qbit-geo-data)
 
 Geographic reference data QBit providing countries, states/provinces, and cities for QQQ applications.
 
@@ -140,6 +141,24 @@ This creates two independent sets of tables:
 - `billing_country`, `billing_stateProvince`, `billing_city`
 
 Query each using its prefixed table name, same entity classes.
+
+## Database Schema
+
+Generate a Liquibase changelog for your database:
+
+```java
+import com.kingsrook.qbits.geodata.liquibase.GeoDataLiquibaseGenerator;
+
+GeoDataQBitConfig config = new GeoDataQBitConfig()
+   .withTableNamePrefix("shipping")
+   .withEnableCountries(true)
+   .withEnableStateProvinces(true)
+   .withEnableCities(true);
+
+GeoDataLiquibaseGenerator.generate(config, Path.of("db/changelog-geo-data.xml"));
+```
+
+The generator creates a changelog with your prefix substituted and only includes tables you've enabled.
 
 ## License
 

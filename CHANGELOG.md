@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Data acquisition tools for dr5hn repository
 - Gzip decompression for cities data
 - Population and country filtering options
+- Liquibase changelog generator with prefix substitution
+- Unit tests for config, producer, generator, and sync components
+- CircleCI CI/CD pipeline configuration
+
+### Changed
+- Upgraded to QQQ 0.35.0 with Java 21 support
 
 ## [0.1.0-alpha] - 2024-12-28
 
