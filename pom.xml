@@ -4,13 +4,45 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
+   <parent>
+      <groupId>com.kingsrook</groupId>
+      <artifactId>qbit-build-parent</artifactId>
+      <version>1.5.1</version>
+   </parent>
+
    <groupId>com.kingsrook.qbits</groupId>
    <artifactId>qbit-geo-data-parent</artifactId>
-   <version>0.1.0-SNAPSHOT</version>
+   <version>${revision}</version>
    <packaging>pom</packaging>
 
    <name>QBit Geographic Data - Parent</name>
    <description>Geographic reference data for QQQ applications</description>
+   <url>https://github.com/QRun-IO/qbit-geo-data</url>
+
+   <licenses>
+      <license>
+         <name>GNU Affero General Public License v3.0</name>
+         <url>https://www.gnu.org/licenses/agpl-3.0.html</url>
+         <distribution>repo</distribution>
+      </license>
+   </licenses>
+
+   <developers>
+      <developer>
+         <id>kingsrook</id>
+         <name>Kingsrook Team</name>
+         <email>contact@kingsrook.com</email>
+         <organization>Kingsrook, LLC</organization>
+         <organizationUrl>https://kingsrook.com</organizationUrl>
+      </developer>
+   </developers>
+
+   <scm>
+      <connection>scm:git:git://github.com/QRun-IO/qbit-geo-data.git</connection>
+      <developerConnection>scm:git:ssh://github.com:QRun-IO/qbit-geo-data.git</developerConnection>
+      <url>https://github.com/QRun-IO/qbit-geo-data</url>
+      <tag>HEAD</tag>
+   </scm>
 
    <modules>
       <module>qbit-geo-data-core</module>
@@ -18,10 +50,10 @@
    </modules>
 
    <properties>
+      <revision>0.1.0-SNAPSHOT</revision>
       <maven.compiler.source>21</maven.compiler.source>
       <maven.compiler.target>21</maven.compiler.target>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-      <qqq.version>0.35.0</qqq.version>
    </properties>
 
    <dependencyManagement>
@@ -32,14 +64,16 @@
             <version>20231013</version>
          </dependency>
          <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
+            <groupId>org.junit</groupId>
+            <artifactId>junit-bom</artifactId>
             <version>5.10.0</version>
+            <type>pom</type>
+            <scope>import</scope>
          </dependency>
          <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.24.2</version>
+            <version>3.27.3</version>
          </dependency>
       </dependencies>
    </dependencyManagement>

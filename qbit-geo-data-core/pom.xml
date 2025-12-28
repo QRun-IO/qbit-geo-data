@@ -7,7 +7,7 @@
    <parent>
       <groupId>com.kingsrook.qbits</groupId>
       <artifactId>qbit-geo-data-parent</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
+      <version>${revision}</version>
    </parent>
 
    <artifactId>qbit-geo-data</artifactId>
@@ -21,7 +21,6 @@
       <dependency>
          <groupId>com.kingsrook.qqq</groupId>
          <artifactId>qqq-backend-core</artifactId>
-         <version>${qqq.version}</version>
       </dependency>
 
       <!-- JSON Processing -->
@@ -44,7 +43,6 @@
       <dependency>
          <groupId>com.kingsrook.qqq</groupId>
          <artifactId>qqq-backend-module-rdbms</artifactId>
-         <version>${qqq.version}</version>
          <scope>test</scope>
       </dependency>
       <dependency>
