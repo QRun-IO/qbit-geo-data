@@ -2,9 +2,9 @@
 
 ## Prerequisites
 
-- Java 17+
+- Java 21+
 - Maven 3.8+
-- QQQ 0.23.0+
+- QQQ 4.0.0+
 
 ## Creating Your Data QBit
 
