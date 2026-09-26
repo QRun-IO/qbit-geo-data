@@ -21,6 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded to QQQ 0.35.0 with Java 21 support
 - Re-pinned to qbit-build-parent 2.0.0 (QQQ 4.0.0); opt-in `qqq-snapshot` Maven profile builds against QQQ 4.1.0-SNAPSHOT
 
+### Fixed
+- Published module poms name their parent by its real version instead of `${revision}` (flatten-maven-plugin)
+
 ## [0.1.0-alpha] - 2024-12-28
 
 ### Added

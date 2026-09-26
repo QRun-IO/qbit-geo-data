@@ -23,3 +23,6 @@ Thumbs.db
 generated/
 
 .claude/
+
+# flatten-maven-plugin output
+.flattened-pom.xml
