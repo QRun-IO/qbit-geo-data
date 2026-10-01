@@ -13,6 +13,10 @@
    <artifactId>qbit-geo-data-tools</artifactId>
    <packaging>jar</packaging>
 
+   <properties>
+      <qbit.noticesDirectory>${project.basedir}/..</qbit.noticesDirectory>
+   </properties>
+
    <name>QBit Geographic Data - Tools</name>
    <description>Data acquisition and formatting utilities for geo-data</description>
 

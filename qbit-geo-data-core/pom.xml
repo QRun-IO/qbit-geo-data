@@ -13,6 +13,10 @@
    <artifactId>qbit-geo-data</artifactId>
    <packaging>jar</packaging>
 
+   <properties>
+      <qbit.noticesDirectory>${project.basedir}/..</qbit.noticesDirectory>
+   </properties>
+
    <name>QBit Geographic Data</name>
    <description>Geographic reference data for QQQ applications - countries, states/provinces, and cities</description>
 
