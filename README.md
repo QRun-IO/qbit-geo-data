@@ -162,4 +162,4 @@ The generator creates a changelog with your prefix substituted and only includes
 
 ## License
 
-AGPL-3.0 - See [LICENSE](LICENSE)
+Apache-2.0 - See [LICENSE](LICENSE)
