@@ -162,4 +162,11 @@ The generator creates a changelog with your prefix substituted and only includes
 
 ## License
 
+Both Maven child modules set `qbit.noticesDirectory` to their parent directory,
+where this repository's `LICENSE` and `NOTICE` live. This supports the shared
+notice packaging correction in `qbit-build-parent`; it takes effect after adopting
+a parent version containing that correction. Existing public parent 2.0.0 is
+unchanged. Verify each generated module archive against these root files when
+integrating the new parent.
+
 Apache-2.0 - See [LICENSE](LICENSE)
