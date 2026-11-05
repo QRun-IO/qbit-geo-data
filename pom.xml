@@ -59,6 +59,17 @@
 
    <dependencyManagement>
       <dependencies>
+         <!-- One JUnit line. The QQQ 4.1 BOM inherits junit-jupiter-engine/params at 6.0.2 from qqq-parent-project, while this pom's JUnit BOM
+              manages junit-jupiter, the API and the platform at 5.10.0; the mixed engine fails discovery ("TestEngine with ID 'junit-jupiter'
+              failed to discover tests") and no test runs. Import this pom's own JUnit version first (first import wins) so every JUnit
+              artifact converges on 5.10.0. -->
+         <dependency>
+            <groupId>org.junit</groupId>
+            <artifactId>junit-bom</artifactId>
+            <version>5.10.0</version>
+            <type>pom</type>
+            <scope>import</scope>
+         </dependency>
          <!-- Published QQQ 4.1 core (minimum QQQ 4.1), imported ahead of the parent's BOM. -->
          <dependency>
             <groupId>com.kingsrook.qqq</groupId>
@@ -71,13 +82,6 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20231013</version>
-         </dependency>
-         <dependency>
-            <groupId>org.junit</groupId>
-            <artifactId>junit-bom</artifactId>
-            <version>5.10.0</version>
-            <type>pom</type>
-            <scope>import</scope>
          </dependency>
          <dependency>
             <groupId>org.assertj</groupId>
