@@ -126,6 +126,10 @@ public class GeoDataQBitProducer implements QBitProducer
     *******************************************************************************/
    private void updateForeignKeyReferences(QTableMetaData table)
    {
+      if(table.getFields() == null)
+      {
+         return;
+      }
       table.getFields().values().forEach(field ->
       {
          if(field.getPossibleValueSourceName() != null)
