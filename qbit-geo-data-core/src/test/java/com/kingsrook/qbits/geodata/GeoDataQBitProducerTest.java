@@ -79,6 +79,38 @@ class GeoDataQBitProducerTest
 
 
    /*******************************************************************************
+    ** The enabled entities produce their tables, on the configured backend, with the
+    ** prefix; the possible value sources point at tables that exist. (On core 4.1 an
+    ** entity annotation only produces a table when it asks for it.)
+    *******************************************************************************/
+   @Test
+   void testProduce_createsTablesAndPossibleValueSourcesPointAtThem() throws QException
+   {
+      QInstance qInstance = new QInstance();
+      qInstance.addBackend(new QBackendMetaData().withName("rdbms"));
+
+      new GeoDataQBitProducer()
+         .withConfig(new GeoDataQBitConfig().withBackendName("rdbms").withTableNamePrefix("geo")
+            .withEnableCountries(true).withEnableStateProvinces(true).withEnableCities(true))
+         .produce(qInstance, "geo");
+
+      assertThat(qInstance.getTables().keySet()).contains("geo_country", "geo_stateProvince", "geo_city");
+      assertThat(qInstance.getTable("geo_city").getBackendName()).isEqualTo("rdbms");
+      assertThat(qInstance.getTable("geo_country").getPrimaryKeyField()).isEqualTo("id");
+      assertThat(qInstance.getTable("geo_country").getFields().keySet()).contains("alpha2Code", "name", "isActive");
+      assertThat(qInstance.getTable("geo_city").getFields().keySet()).contains("name");
+      for(var pvs : qInstance.getPossibleValueSources().values())
+      {
+         if(pvs.getTableName() != null)
+         {
+            assertThat(qInstance.getTable(pvs.getTableName())).as(pvs.getName()).isNotNull();
+         }
+      }
+   }
+
+
+
+   /*******************************************************************************
     ** Test that producer stores config in QBit metadata.
     *******************************************************************************/
    @Test

@@ -13,7 +13,7 @@ import com.kingsrook.qqq.backend.core.model.data.QRecordEntity;
 import com.kingsrook.qqq.backend.core.model.metadata.producers.annotations.QMetaDataProducingEntity;
 
 
-@QMetaDataProducingEntity(producePossibleValueSource = true)
+@QMetaDataProducingEntity(produceTableMetaData = true, producePossibleValueSource = true)
 public class Country extends QRecordEntity
 {
    public static final String TABLE_NAME = "country";
@@ -170,5 +170,86 @@ public class Country extends QRecordEntity
    public Instant getModifyDate()
    {
       return modifyDate;
+   }
+
+
+   /*******************************************************************************
+    ** Setter for id (QRecordEntity discovers a field only from a getter and setter pair).
+    *******************************************************************************/
+   public void setId(Integer id)
+   {
+      this.id = id;
+   }
+
+
+   /*******************************************************************************
+    ** Setter for alpha2Code (QRecordEntity discovers a field only from a getter and setter pair).
+    *******************************************************************************/
+   public void setAlpha2Code(String alpha2Code)
+   {
+      this.alpha2Code = alpha2Code;
+   }
+
+
+   /*******************************************************************************
+    ** Setter for alpha3Code (QRecordEntity discovers a field only from a getter and setter pair).
+    *******************************************************************************/
+   public void setAlpha3Code(String alpha3Code)
+   {
+      this.alpha3Code = alpha3Code;
+   }
+
+
+   /*******************************************************************************
+    ** Setter for numericCode (QRecordEntity discovers a field only from a getter and setter pair).
+    *******************************************************************************/
+   public void setNumericCode(Integer numericCode)
+   {
+      this.numericCode = numericCode;
+   }
+
+
+   /*******************************************************************************
+    ** Setter for name (QRecordEntity discovers a field only from a getter and setter pair).
+    *******************************************************************************/
+   public void setName(String name)
+   {
+      this.name = name;
+   }
+
+
+   /*******************************************************************************
+    ** Setter for officialName (QRecordEntity discovers a field only from a getter and setter pair).
+    *******************************************************************************/
+   public void setOfficialName(String officialName)
+   {
+      this.officialName = officialName;
+   }
+
+
+   /*******************************************************************************
+    ** Setter for isActive (QRecordEntity discovers a field only from a getter and setter pair).
+    *******************************************************************************/
+   public void setIsActive(Boolean isActive)
+   {
+      this.isActive = isActive;
+   }
+
+
+   /*******************************************************************************
+    ** Setter for createDate (QRecordEntity discovers a field only from a getter and setter pair).
+    *******************************************************************************/
+   public void setCreateDate(Instant createDate)
+   {
+      this.createDate = createDate;
+   }
+
+
+   /*******************************************************************************
+    ** Setter for modifyDate (QRecordEntity discovers a field only from a getter and setter pair).
+    *******************************************************************************/
+   public void setModifyDate(Instant modifyDate)
+   {
+      this.modifyDate = modifyDate;
    }
 }
